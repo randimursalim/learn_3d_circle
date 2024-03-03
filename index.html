@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Belajar Multiple Control Browser</title>
+    <style>
+      #circle {
+        position: fixed;
+        width: 100px;
+        height: 100px;
+        background-color: cadetblue;
+        border-radius: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>3d Magic</h1>
+    <div id="circle"></div>
+
+    <script>
+      const circleChannel = new BroadcastChannel("circle_channel");
+      const circle = document.getElementById("circle");
+
+      function circleMovement(event) {
+        const x = event.clientX,
+          y = event.clientY;
+        circle.style.left = x + "px";
+        circle.style.right = "";
+        circle.style.top = y + "px";
+        circle.style.bottom = "";
+
+        circleChannel.postMessage({ x, y });
+      }
+
+      circleChannel.onmessage = (event) => {
+        const { x, y } = event.data;
+        circle.style.right = x + "px";
+        circle.style.left = "";
+        circle.style.bottom = y + "px";
+        circle.style.top = "";
+      };
+
+      addEventListener("mousemove", circleMovement);
+    </script>
+  </body>
+</html>
